@@ -31,102 +31,300 @@ function App() {
       });
 
       if (!response.ok) {
-        throw new Error("Prediction request failed.");
+        throw new Error("Prediction failed");
       }
 
       const data = await response.json();
-
       setResult(data);
     } catch (err) {
       setError(
-        "Could not connect to the prediction server. Make sure FastAPI is running."
+        "Unable to connect to the prediction service. Please make sure the FastAPI server is running."
       );
     } finally {
       setLoading(false);
     }
   };
 
+  const resetForm = () => {
+    setSize("");
+    setRooms("");
+    setAge("");
+    setResult(null);
+    setError("");
+  };
+
   return (
-    <div className="container">
-      <h1>Property Price Predictor</h1>
+    <div className="app">
 
-      <p className="description">
-        Enter the property details to predict its selling and rental prices.
-      </p>
-
-      <form onSubmit={predictProperty}>
-        <div className="form-group">
-          <label>Property Size (sqm)</label>
-
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={size}
-            onChange={(e) => setSize(e.target.value)}
-            placeholder="e.g. 180"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Number of Rooms</label>
-
-          <input
-            type="number"
-            min="1"
-            value={rooms}
-            onChange={(e) => setRooms(e.target.value)}
-            placeholder="e.g. 3"
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>House Age (years)</label>
-
-          <input
-            type="number"
-            min="0"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            placeholder="e.g. 5"
-            required
-          />
-        </div>
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Predicting..." : "Predict Price"}
-        </button>
-      </form>
-
-      {error && (
-        <div className="error">
-          {error}
-        </div>
-      )}
-
-      {result && (
-        <div className="results">
-          <h2>Prediction Results</h2>
-
-          <div className="result-card">
-            <h3>Predicted Selling Price</h3>
-
-            <p>
-              {result.predicted_selling_price.toLocaleString()}
-            </p>
-          </div>
-
-          <div className="result-card">
-            <h3>Predicted Rental Price</h3>
-
-            <p>
-              {result.predicted_rental_price.toLocaleString()}
-            </p>
+      {/* Navigation */}
+      <nav className="navbar">
+        <div className="brand">
+          <div className="brand-icon">P</div>
+          <div>
+            <h2>PropValue</h2>
+            <span>AI Property Valuation</span>
           </div>
         </div>
-      )}
+
+        <div className="nav-status">
+          <span className="status-dot"></span>
+          Prediction Engine Online
+        </div>
+      </nav>
+
+      {/* Hero */}
+      <main className="main-content">
+
+        <section className="hero">
+          <div className="hero-text">
+            <span className="eyebrow">SMART PROPERTY ANALYTICS</span>
+
+            <h1>
+              Estimate your property's
+              <span> market value.</span>
+            </h1>
+
+            <p>
+              Enter a few property details and our machine learning models
+              will estimate both the selling price and rental value.
+            </p>
+          </div>
+        </section>
+
+        {/* Main Card */}
+        <section className="prediction-layout">
+
+          {/* Input panel */}
+          <div className="card input-card">
+
+            <div className="card-header">
+              <div>
+                <span className="section-label">PROPERTY DETAILS</span>
+                <h2>Tell us about the property</h2>
+              </div>
+
+              <div className="step-number">01</div>
+            </div>
+
+            <form onSubmit={predictProperty}>
+
+              <div className="form-group">
+                <label>
+                  Property Size
+                  <span>Square meters</span>
+                </label>
+
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    value={size}
+                    onChange={(e) => setSize(e.target.value)}
+                    placeholder="180"
+                    required
+                  />
+                  <span>m²</span>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>
+                  Number of Rooms
+                  <span>Total rooms</span>
+                </label>
+
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    min="1"
+                    value={rooms}
+                    onChange={(e) => setRooms(e.target.value)}
+                    placeholder="3"
+                    required
+                  />
+                  <span>Rooms</span>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>
+                  Property Age
+                  <span>Years since construction</span>
+                </label>
+
+                <div className="input-wrapper">
+                  <input
+                    type="number"
+                    min="0"
+                    value={age}
+                    onChange={(e) => setAge(e.target.value)}
+                    placeholder="5"
+                    required
+                  />
+                  <span>Years</span>
+                </div>
+              </div>
+
+              <div className="button-group">
+                <button
+                  className="predict-button"
+                  type="submit"
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner"></span>
+                      Calculating...
+                    </>
+                  ) : (
+                    <>
+                      Calculate Property Value
+                      <span className="arrow">→</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  className="reset-button"
+                  onClick={resetForm}
+                >
+                  Reset
+                </button>
+              </div>
+            </form>
+
+            {error && (
+              <div className="error-message">
+                <strong>Prediction unavailable</strong>
+                <span>{error}</span>
+              </div>
+            )}
+          </div>
+
+          {/* Results panel */}
+          <div className="card results-card">
+
+            <div className="card-header">
+              <div>
+                <span className="section-label">VALUATION RESULTS</span>
+                <h2>Estimated market value</h2>
+              </div>
+
+              <div className="step-number">02</div>
+            </div>
+
+            {!result ? (
+              <div className="empty-state">
+                <div className="empty-icon">⌂</div>
+
+                <h3>Ready for a valuation?</h3>
+
+                <p>
+                  Enter the property information on the left and your
+                  estimated values will appear here.
+                </p>
+
+                <div className="prediction-types">
+                  <div>
+                    <span>01</span>
+                    <p>Estimated Selling Price</p>
+                  </div>
+
+                  <div>
+                    <span>02</span>
+                    <p>Estimated Rental Price</p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="results">
+
+                <div className="property-summary">
+                  <div>
+                    <span>PROPERTY</span>
+                    <strong>
+                      {result.size_sqm} m² · {result.num_rooms} rooms
+                    </strong>
+                  </div>
+
+                  <div>
+                    <span>AGE</span>
+                    <strong>{result.house_age_years} years</strong>
+                  </div>
+                </div>
+
+                <div className="price-card selling">
+                  <div className="price-label">
+                    <span className="price-icon">↗</span>
+                    <div>
+                      <span>ESTIMATED SELLING PRICE</span>
+                      <small>Predicted market value</small>
+                    </div>
+                  </div>
+
+                  <div className="price">
+                    {result.predicted_selling_price.toLocaleString()}
+                  </div>
+                </div>
+
+                <div className="price-card rental">
+                  <div className="price-label">
+                    <span className="price-icon">⌂</span>
+                    <div>
+                      <span>ESTIMATED RENTAL PRICE</span>
+                      <small>Predicted rental value</small>
+                    </div>
+                  </div>
+
+                  <div className="price">
+                    {result.predicted_rental_price.toLocaleString()}
+                  </div>
+                </div>
+
+                <div className="result-note">
+                  <span>ⓘ</span>
+                  These values are machine-learning estimates based on the
+                  property characteristics provided.
+                </div>
+
+              </div>
+            )}
+          </div>
+
+        </section>
+
+        {/* Footer information */}
+        <section className="features">
+
+          <div>
+            <strong>01</strong>
+            <span>Machine Learning</span>
+            <p>Predictions generated using trained regression models.</p>
+          </div>
+
+          <div>
+            <strong>02</strong>
+            <span>Instant Results</span>
+            <p>Receive selling and rental estimates in seconds.</p>
+          </div>
+
+          <div>
+            <strong>03</strong>
+            <span>Data Driven</span>
+            <p>Estimates are based on property characteristics.</p>
+          </div>
+
+        </section>
+
+      </main>
+
+      <footer>
+        <span>PropValue</span>
+        <span>Property Price Prediction System</span>
+      </footer>
+
     </div>
   );
 }
