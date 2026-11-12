@@ -73,7 +73,7 @@ input {
   margin-top: 2px;
 
   font-size: 11px;
-  color: #8a93a3;
+  color: #013ea7;
 }
 
 .nav-status {
@@ -134,7 +134,7 @@ input {
 
   margin: 0;
 
-  color: #697386;
+  color: #1f2735;
   font-size: 17px;
   line-height: 1.7;
 }
@@ -171,6 +171,7 @@ input {
 
   font-size: 22px;
   letter-spacing: -0.6px;
+  color: #172033;
 }
 
 .step-number {
