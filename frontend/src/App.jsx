@@ -80,8 +80,8 @@ function App() {
             <span className="eyebrow">SMART PROPERTY ANALYTICS</span>
 
             <h1>
-              Estimate your property's
-              <span> market value.</span>
+              <span>Estimate your property's
+               market value.</span>
             </h1>
 
             <p>
