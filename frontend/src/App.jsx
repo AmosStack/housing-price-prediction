@@ -18,7 +18,7 @@ function App() {
     setResult(null);
 
     try {
-      const response = await  fetch("https://housing-price-prediction-8kk7.onrender.com//predict", {
+      const response = await  fetch(`${import.meta.env.VITE_API_URL}/predict`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
